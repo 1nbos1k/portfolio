@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Coffee — slow coffee & fresh bakes in Prenzlauer Berg</title>
+<meta name="description" content="Neighbourhood coffee house roasting in small batches. Espresso, filter, fresh pastries every morning. Open daily on Oderberger Straße, Berlin.">
+<meta name="theme-color" content="#2B1A12">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F7EFE4;
+    --paper:#FFFAF3;
+    --sand:#EADBC6;
+    --roast:#2B1A12;
+    --bean:#4A2E20;
+    --ember:#D2552A;
+    --ember-deep:#A83F1C;
+    --glow:#F2A65A;
+    --muted:#6E5546;
+    --line:#DCC9B1;
+    --serif:"Fraunces", Georgia, "Times New Roman", serif;
+    --sans:"Outfit", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);color:var(--roast);background:var(--cream);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--ember);outline-offset:3px;border-radius:4px}
+  .wrap{width:min(1120px, 100% - 40px);margin-inline:auto}
+
+  .btn{display:inline-block;font:600 16px/1 var(--sans);text-decoration:none;border:0;cursor:pointer;
+       padding:16px 26px;border-radius:14px;background:var(--ember);color:#fff;transition:background .15s ease, transform .15s ease}
+  .btn:hover{background:var(--ember-deep);transform:translateY(-1px)}
+  .btn-line{background:transparent;color:var(--roast);box-shadow:inset 0 0 0 2px var(--roast)}
+  .btn-line:hover{background:var(--roast);color:var(--cream)}
+
+  /* header */
+  .top{position:sticky;top:0;z-index:10;background:rgba(247,239,228,.92);backdrop-filter:blur(8px);border-bottom:1px solid transparent}
+  .top.scrolled{border-bottom-color:var(--line)}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+  .logo{display:flex;align-items:center;gap:10px;font:700 24px/1 var(--serif);text-decoration:none;letter-spacing:-.3px}
+  .logo svg{width:28px;height:28px}
+  nav ul{display:flex;gap:28px;list-style:none}
+  nav a{text-decoration:none;font-weight:500;font-size:16px}
+  nav a:hover{color:var(--ember-deep)}
+  .top .btn{padding:12px 18px;font-size:15px}
+
+  /* hero */
+  .hero{padding:56px 0 88px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center}
+  .status{display:inline-flex;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:8px 16px 8px 12px;font-size:15px;font-weight:500}
+  .status i{width:10px;height:10px;border-radius:50%;background:#9A8A7C;flex:none}
+  .status.open i{background:#3E9A54;box-shadow:0 0 0 4px rgba(62,154,84,.18)}
+  .hero h1{font:500 clamp(48px, 7.4vw, 92px)/.98 var(--serif);letter-spacing:-2px;margin:26px 0 22px}
+  .hero h1 em{font-style:italic;color:var(--ember)}
+  .hero .lead{font-size:clamp(18px, 2vw, 20px);color:var(--muted);max-width:36ch;margin-bottom:34px}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+  .hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:40px;padding-top:26px;border-top:1px solid var(--line);list-style:none}
+  .hero-meta b{display:block;font:700 26px/1.1 var(--serif)}
+  .hero-meta span{font-size:14px;color:var(--muted)}
+
+  /* signature: the warm cup */
+  .cup-wrap{position:relative}
+  .cup-card{position:relative;aspect-ratio:1/1.08;border-radius:220px 220px 28px 28px;background:var(--roast);overflow:hidden;
+            display:flex;align-items:flex-end;justify-content:center;padding-bottom:12%}
+  .cup-card::before{content:"";position:absolute;width:120%;aspect-ratio:1;left:-10%;bottom:-62%;border-radius:50%;
+            background:radial-gradient(circle at 50% 30%, rgba(242,166,90,.55), rgba(210,85,42,.25) 40%, transparent 70%)}
+  .cup{position:relative;width:62%}
+  .steam path{fill:none;stroke:var(--sand);stroke-width:5;stroke-linecap:round;opacity:0;animation:steam 4s ease-in-out infinite}
+  .steam path:nth-child(2){animation-delay:1.3s}
+  .steam path:nth-child(3){animation-delay:2.6s}
+  @keyframes steam{0%{opacity:0;transform:translateY(14px)}35%{opacity:.75}100%{opacity:0;transform:translateY(-22px)}}
+  .badge{position:absolute;z-index:2;top:16%;right:-14px;width:108px;height:108px;border-radius:50%;background:var(--glow);color:var(--roast);
+         display:grid;place-items:center;text-align:center;font:700 15px/1.15 var(--serif);transform:rotate(10deg)}
+  .badge b{display:block;font-size:30px;margin-top:2px}
+  @media (prefers-reduced-motion: reduce){ .steam path{animation:none;opacity:.6} .btn{transition:none} html{scroll-behavior:auto} }
+
+  /* sections */
+  section{padding:100px 0}
+  .kicker{font-size:14px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ember-deep);margin-bottom:12px}
+  .h2{font:500 clamp(38px, 5.2vw, 60px)/1.02 var(--serif);letter-spacing:-1px;margin-bottom:16px}
+  .intro{max-width:54ch;color:var(--muted);font-size:18px}
+
+  /* menu */
+  .menu{background:var(--paper)}
+  .menu-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap}
+  .tabs{display:flex;gap:6px;background:var(--cream);padding:5px;border-radius:14px;border:1px solid var(--line)}
+  .tabs button{font:600 15px/1 var(--sans);border:0;background:transparent;color:var(--muted);padding:12px 16px;border-radius:10px;cursor:pointer}
+  .tabs button[aria-selected="true"]{background:var(--roast);color:var(--cream)}
+  .panel{margin-top:44px;display:grid;grid-template-columns:repeat(2,1fr);gap:0 64px}
+  .panel[hidden]{display:none}
+  .item{padding:20px 0;border-bottom:1px dashed var(--line)}
+  .item-row{display:flex;align-items:baseline;gap:12px}
+  .item h3{font:600 19px/1.3 var(--sans)}
+  .item .dots{flex:1;border-bottom:2px dotted var(--line);transform:translateY(-5px);min-width:20px}
+  .item .price{font:700 20px/1 var(--serif);white-space:nowrap}
+  .item p{color:var(--muted);font-size:15px;margin-top:4px}
+  .tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;background:var(--glow);color:var(--roast);border-radius:6px;padding:3px 7px;margin-left:8px;vertical-align:3px}
+  .menu-note{margin-top:28px;font-size:15px;color:var(--muted)}
+
+  /* story */
+  .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+  .steps{list-style:none;display:grid;gap:0;counter-reset:s}
+  .steps li{display:grid;grid-template-columns:56px 1fr;gap:18px;padding:22px 0;border-top:1px solid var(--line)}
+  .steps li::before{counter-increment:s;content:"0" counter(s);font:700 28px/1 var(--serif);color:var(--ember)}
+  .steps strong{display:block;font-size:19px;margin-bottom:2px}
+  .steps span{color:var(--muted)}
+
+  /* reviews */
+  .reviews{background:var(--roast);color:var(--cream)}
+  .reviews .kicker{color:var(--glow)}
+  .reviews .intro{color:#CDB8A4}
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+  blockquote{background:var(--bean);border-radius:22px;padding:30px}
+  .stars{color:var(--glow);letter-spacing:3px;font-size:18px;margin-bottom:14px}
+  blockquote p{font:500 20px/1.45 var(--serif)}
+  blockquote cite{display:block;margin-top:18px;font-style:normal;color:#CDB8A4;font-size:15px}
+
+  /* visit */
+  .visit-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+  .hours{width:100%;border-collapse:collapse;margin-top:32px;font-size:17px}
+  .hours td{padding:13px 0;border-bottom:1px solid var(--line)}
+  .hours td:last-child{text-align:right;font-weight:600}
+  .hours tr.today td{color:var(--ember-deep);font-weight:700}
+  .hours tr.today td:first-child::after{content:"Today";font:600 11px/1 var(--sans);letter-spacing:.5px;text-transform:uppercase;background:var(--ember);color:#fff;border-radius:5px;padding:4px 6px;margin-left:10px;vertical-align:2px}
+  .address{margin-top:28px;font-style:normal;line-height:1.7}
+  .address b{font:700 20px/1.4 var(--serif)}
+  .address a{color:var(--ember-deep);font-weight:600}
+  .map{border-radius:24px;overflow:hidden;border:1px solid var(--line);background:var(--sand);aspect-ratio:4/3.3;position:relative}
+  .map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:sepia(.25) saturate(.9)}
+  .map-cta{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap}
+
+  /* reserve */
+  .reserve{background:var(--sand)}
+  .reserve-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+  .perks{list-style:none;margin-top:28px;display:grid;gap:10px}
+  .perks li{display:flex;gap:12px;align-items:baseline}
+  .perks li::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--ember);flex:none;transform:translateY(-1px)}
+  form{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--paper);border-radius:24px;padding:32px;box-shadow:0 20px 50px -30px rgba(43,26,18,.45)}
+  form .full{grid-column:1/-1}
+  label{font-weight:600;font-size:15px;display:grid;gap:6px;min-width:0}
+  input, select{font:inherit;font-weight:400;width:100%;min-width:0;padding:13px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--roast)}
+  input:focus, select:focus{outline:none;border-color:var(--ember)}
+  .err{color:#B3261E;font-size:14px;font-weight:600}
+  .err:empty{display:none}
+  form .btn{width:100%;margin-top:4px}
+  .done{display:none;text-align:center;padding:30px 10px}
+  .done h3{font:500 36px/1.1 var(--serif);margin-bottom:8px}
+  .done p{color:var(--muted)}
+  form.sent > :not(.done){display:none}
+  form.sent{display:block}
+  form.sent .done{display:block}
+
+  footer{background:var(--roast);color:#CDB8A4;padding:40px 0;font-size:15px}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer a{color:var(--cream)}
+
+  /* responsive */
+  @media (max-width: 960px){
+    nav{display:none}
+    .hero{padding-top:36px}
+    .hero-grid, .story-grid, .visit-grid, .reserve-grid{grid-template-columns:1fr;gap:44px}
+    .cup-wrap{max-width:420px;width:100%;margin-inline:auto}
+    .panel{grid-template-columns:1fr}
+    .quotes{grid-template-columns:1fr}
+    section{padding:76px 0}
+  }
+  @media (max-width: 520px){
+    .top .btn{padding:11px 14px;font-size:14px}
+    .hero h1{letter-spacing:-1px}
+    .hero-actions .btn{flex:1 1 100%;text-align:center}
+    .hero-meta{gap:22px}
+    .tabs{width:100%}
+    .tabs button{flex:1;padding:12px 8px}
+    form{grid-template-columns:1fr;padding:24px}
+    .badge{width:92px;height:92px;font-size:13px;top:14%;right:-6px}
+    .badge b{font-size:25px}
+    blockquote{padding:24px}
+  }
+</style>
+</head>
+<body>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="logo" href="#">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3c3 5 8 7.5 8 14a8 8 0 0 1-16 0c0-4 2-6 3.5-8 .5 2.5 2 4 3.5 4.5C14 9 14.5 6 16 3z" fill="#D2552A"/><path d="M16 15c1.6 2.4 3.5 3.4 3.5 6a3.5 3.5 0 0 1-7 0c0-2.4 2-3.6 3.5-6z" fill="#F2A65A"/></svg>
+      Ember Coffee
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#story">Our coffee</a></li>
+        <li><a href="#visit">Visit</a></li>
+      </ul>
+    </nav>
+    <a class="btn" href="#reserve">Book a table</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="status" id="status"><i></i><span>Open daily from 8:00</span></p>
+        <h1 id="hero-title">Slow coffee,<br><em>warm</em> room.</h1>
+        <p class="lead">Beans roasted in small batches, pastries out of the oven at 8, and a big window seat waiting for you on Oderberger Straße.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#menu">See the menu</a>
+          <a class="btn btn-line" href="#visit">Find us</a>
+        </div>
+        <ul class="hero-meta">
+          <li><b>2 min</b><span>from Eberswalder Str.</span></li>
+          <li><b>12</b><span>pastries baked daily</span></li>
+          <li><b>Free</b><span>Wi-Fi &amp; oat milk</span></li>
+        </ul>
+      </div>
+
+      <div class="cup-wrap" aria-hidden="true">
+      <div class="badge"><span>roasting<br>since<b>2019</b></span></div>
+      <div class="cup-card">
+        <svg class="cup" viewBox="0 0 240 230">
+          <g class="steam">
+            <path d="M88 70c-12-14 12-22 0-38"/>
+            <path d="M120 66c-12-14 12-22 0-38"/>
+            <path d="M152 70c-12-14 12-22 0-38"/>
+          </g>
+          <ellipse cx="120" cy="212" rx="104" ry="14" fill="#4A2E20"/>
+          <path d="M184 112h10a28 28 0 0 1 0 56h-16" fill="none" stroke="#F7EFE4" stroke-width="12"/>
+          <path d="M40 96h160l-12 86a32 32 0 0 1-32 28H84a32 32 0 0 1-32-28z" fill="#F7EFE4"/>
+          <path d="M44 120h152l-3 22H47z" fill="#D2552A"/>
+          <ellipse cx="120" cy="96" rx="80" ry="12" fill="#4A2E20"/>
+          <ellipse cx="120" cy="96" rx="64" ry="7" fill="#7A4A2E"/>
+        </svg>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu" id="menu" aria-labelledby="menu-title">
+    <div class="wrap">
+      <div class="menu-head">
+        <div>
+          <p class="kicker">Menu</p>
+          <h2 class="h2" id="menu-title">What we're pouring</h2>
+          <p class="intro">Everything is made to order. Oat, almond and lactose-free milk at no extra cost.</p>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Menu categories">
+          <button role="tab" id="t-coffee" aria-controls="p-coffee" aria-selected="true">Coffee</button>
+          <button role="tab" id="t-other" aria-controls="p-other" aria-selected="false" tabindex="-1">Tea &amp; more</button>
+          <button role="tab" id="t-bake" aria-controls="p-bake" aria-selected="false" tabindex="-1">Bakery</button>
+        </div>
+      </div>
+
+      <div class="panel" id="p-coffee" role="tabpanel" aria-labelledby="t-coffee">
+        <div class="item"><div class="item-row"><h3>Espresso</h3><span class="dots"></span><span class="price">€2.40</span></div><p>Our house blend: dark chocolate, hazelnut, a little cherry.</p></div>
+        <div class="item"><div class="item-row"><h3>Flat white</h3><span class="dots"></span><span class="price">€3.80</span></div><p>Double ristretto with silky steamed milk.</p></div>
+        <div class="item"><div class="item-row"><h3>Cappuccino</h3><span class="dots"></span><span class="price">€3.50</span></div><p>Classic, with a thick layer of foam.</p></div>
+        <div class="item"><div class="item-row"><h3>Ember latte <span class="tag">House</span></h3><span class="dots"></span><span class="price">€4.60</span></div><p>Espresso, brown-butter caramel, pinch of sea salt.</p></div>
+        <div class="item"><div class="item-row"><h3>V60 filter</h3><span class="dots"></span><span class="price">€4.20</span></div><p>Single origin, hand-poured. Ask what's on today.</p></div>
+        <div class="item"><div class="item-row"><h3>Cold brew</h3><span class="dots"></span><span class="price">€4.00</span></div><p>Steeped for 18 hours. Smooth, low acidity.</p></div>
+      </div>
+
+      <div class="panel" id="p-other" role="tabpanel" aria-labelledby="t-other" hidden>
+        <div class="item"><div class="item-row"><h3>Chai latte</h3><span class="dots"></span><span class="price">€4.20</span></div><p>Our own spice mix, brewed fresh every morning.</p></div>
+        <div class="item"><div class="item-row"><h3>Matcha latte</h3><span class="dots"></span><span class="price">€4.50</span></div><p>Ceremonial-grade matcha, whisked by hand.</p></div>
+        <div class="item"><div class="item-row"><h3>Hot chocolate</h3><span class="dots"></span><span class="price">€3.90</span></div><p>70% dark chocolate melted into steamed milk.</p></div>
+        <div class="item"><div class="item-row"><h3>Loose-leaf tea</h3><span class="dots"></span><span class="price">€3.20</span></div><p>Earl grey, green sencha, mint or chamomile.</p></div>
+        <div class="item"><div class="item-row"><h3>Fresh orange juice</h3><span class="dots"></span><span class="price">€4.00</span></div><p>Pressed to order.</p></div>
+        <div class="item"><div class="item-row"><h3>Ginger lemonade</h3><span class="dots"></span><span class="price">€3.80</span></div><p>House-made, lightly sparkling.</p></div>
+      </div>
+
+      <div class="panel" id="p-bake" role="tabpanel" aria-labelledby="t-bake" hidden>
+        <div class="item"><div class="item-row"><h3>Butter croissant</h3><span class="dots"></span><span class="price">€2.80</span></div><p>Laminated by hand, baked every morning.</p></div>
+        <div class="item"><div class="item-row"><h3>Cardamom bun <span class="tag">Favourite</span></h3><span class="dots"></span><span class="price">€3.40</span></div><p>Swedish style, sticky and fragrant.</p></div>
+        <div class="item"><div class="item-row"><h3>Banana bread</h3><span class="dots"></span><span class="price">€3.60</span></div><p>Served warm with salted butter. Vegan option.</p></div>
+        <div class="item"><div class="item-row"><h3>Sourdough toast</h3><span class="dots"></span><span class="price">€6.50</span></div><p>Avocado, chili flakes, lime and a soft egg.</p></div>
+        <div class="item"><div class="item-row"><h3>Basque cheesecake</h3><span class="dots"></span><span class="price">€4.80</span></div><p>Burnt top, creamy middle. Weekends only.</p></div>
+        <div class="item"><div class="item-row"><h3>Granola bowl</h3><span class="dots"></span><span class="price">€6.90</span></div><p>House granola, Greek yoghurt, seasonal fruit.</p></div>
+      </div>
+      <p class="menu-note">Allergen info is available at the counter, just ask.</p>
+    </div>
+  </section>
+
+  <section id="story" aria-labelledby="story-title">
+    <div class="wrap story-grid">
+      <div>
+        <p class="kicker">Our coffee</p>
+        <h2 class="h2" id="story-title">From farm to your cup, in three steps</h2>
+        <p class="intro">We buy green beans directly from three family farms, roast them ourselves every Tuesday, and only serve coffee that's between 5 and 25 days old.</p>
+      </div>
+      <ol class="steps">
+        <li><div><strong>Sourced direct</strong><span>Partner farms in Colombia, Ethiopia and Guatemala, paid well above fair-trade price.</span></div></li>
+        <li><div><strong>Roasted on site</strong><span>Small 5 kg batches in the back room, so every bag has a roast date on it.</span></div></li>
+        <li><div><strong>Brewed with care</strong><span>Every barista trains for four weeks before they make your first coffee.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="reviews" aria-labelledby="rev-title">
+    <div class="wrap">
+      <p class="kicker">Reviews</p>
+      <h2 class="h2" id="rev-title">Regulars say it best</h2>
+      <p class="intro">Sample reviews for this demo page.</p>
+      <div class="quotes">
+        <blockquote>
+          <div class="stars" aria-label="5 out of 5">★★★★★</div>
+          <p>“The cardamom bun alone is worth the trip. I come every Saturday now.”</p>
+          <cite>Lena, neighbour</cite>
+        </blockquote>
+        <blockquote>
+          <div class="stars" aria-label="5 out of 5">★★★★★</div>
+          <p>“Quiet in the mornings, good Wi-Fi, and the best flat white I've had in Berlin.”</p>
+          <cite>Tom, works remotely</cite>
+        </blockquote>
+        <blockquote>
+          <div class="stars" aria-label="5 out of 5">★★★★★</div>
+          <p>“They remembered my order on my second visit. That's the kind of place it is.”</p>
+          <cite>Sara, student</cite>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit" aria-labelledby="visit-title">
+    <div class="wrap visit-grid">
+      <div>
+        <p class="kicker">Visit</p>
+        <h2 class="h2" id="visit-title">Come say hi</h2>
+        <table class="hours" aria-label="Opening hours">
+          <tbody id="hours">
+            <tr data-d="1"><td>Monday</td><td>8:00 – 18:00</td></tr>
+            <tr data-d="2"><td>Tuesday</td><td>8:00 – 18:00</td></tr>
+            <tr data-d="3"><td>Wednesday</td><td>8:00 – 18:00</td></tr>
+            <tr data-d="4"><td>Thursday</td><td>8:00 – 18:00</td></tr>
+            <tr data-d="5"><td>Friday</td><td>8:00 – 20:00</td></tr>
+            <tr data-d="6"><td>Saturday</td><td>9:00 – 20:00</td></tr>
+            <tr data-d="0"><td>Sunday</td><td>9:00 – 17:00</td></tr>
+          </tbody>
+        </table>
+        <address class="address">
+          <b>Oderberger Str. 24</b><br>
+          10435 Berlin, Prenzlauer Berg<br>
+          <a href="tel:+493012345678">+49 30 1234 5678</a> · <a href="mailto:hello@embercoffee.example">hello@embercoffee.example</a>
+        </address>
+      </div>
+      <div>
+        <div class="map">
+          <iframe title="Map showing Ember Coffee on Oderberger Straße, Berlin" loading="lazy"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=13.4005%2C52.5363%2C13.4145%2C52.5425&amp;layer=mapnik&amp;marker=52.5394%2C13.4075"></iframe>
+        </div>
+        <div class="map-cta">
+          <a class="btn" href="https://www.openstreetmap.org/?mlat=52.5394&amp;mlon=13.4075#map=17/52.5394/13.4075" target="_blank" rel="noopener">Get directions</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reserve" id="reserve" aria-labelledby="res-title">
+    <div class="wrap reserve-grid">
+      <div>
+        <p class="kicker">Book a table</p>
+        <h2 class="h2" id="res-title">Save your window seat</h2>
+        <p class="intro">Walk-ins are always welcome. For groups or weekend brunch, book ahead and we'll have your table ready.</p>
+        <ul class="perks">
+          <li>We confirm by email within an hour</li>
+          <li>Groups up to 8 people</li>
+          <li>Free cancellation anytime</li>
+        </ul>
+      </div>
+      <form id="form" novalidate>
+        <label class="full">Your name
+          <input id="name" name="name" autocomplete="name" placeholder="Lena Fischer">
+        </label>
+        <label class="full">Email
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="lena@example.com">
+        </label>
+        <label>Date
+          <input id="date" name="date" type="date">
+        </label>
+        <label>Time
+          <select id="time" name="time">
+            <option>9:00</option><option>10:00</option><option selected>11:00</option>
+            <option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option>
+          </select>
+        </label>
+        <label class="full">Guests
+          <select id="guests" name="guests">
+            <option>1 person</option><option selected>2 people</option><option>3 people</option>
+            <option>4 people</option><option>5–8 people</option>
+          </select>
+        </label>
+        <p class="err full" id="err" role="alert"></p>
+        <button class="btn full" type="submit">Book a table</button>
+        <div class="done" aria-live="polite">
+          <h3>Table requested</h3>
+          <p id="done-msg">Thanks! We'll confirm by email within an hour.</p>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Ember Coffee · Demo page, fictional brand</span>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script>
+  // header border on scroll
+  const header = document.getElementById('top');
+  addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 10), {passive:true});
+
+  // menu tabs
+  const tabs = [...document.querySelectorAll('[role="tab"]')];
+  function select(tab){
+    tabs.forEach(t => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      const next = tabs[(i + d + tabs.length) % tabs.length];
+      select(next); next.focus();
+    });
+  });
+
+  // today's hours + open-now status (Berlin time)
+  const hours = {0:[9,17],1:[8,18],2:[8,18],3:[8,18],4:[8,18],5:[8,20],6:[9,20]};
+  const now = new Date(new Date().toLocaleString('en-US', {timeZone:'Europe/Berlin'}));
+  const day = now.getDay(), h = now.getHours() + now.getMinutes() / 60;
+  document.querySelector(`#hours tr[data-d="${day}"]`).classList.add('today');
+  const [o, c] = hours[day];
+  const status = document.getElementById('status');
+  if (h >= o && h < c) {
+    status.classList.add('open');
+    status.querySelector('span').textContent = `Open now · until ${c}:00`;
+  } else {
+    const nd = h < o ? day : (day + 1) % 7;
+    status.querySelector('span').textContent = `Closed now · opens ${h < o ? 'today' : 'tomorrow'} at ${hours[nd][0]}:00`;
+  }
+
+  // booking form
+  const form = document.getElementById('form');
+  const err = document.getElementById('err');
+  const dateIn = document.getElementById('date');
+  const iso = d => d.toISOString().slice(0, 10);
+  dateIn.min = iso(new Date());
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = form.name.value.trim();
+    const email = form.email.value.trim();
+    if (!name) { err.textContent = 'Enter your name.'; form.name.focus(); return; }
+    if (!/^\S+@\S+\.\S+$/.test(email)) { err.textContent = 'Enter a valid email, like lena@example.com.'; form.email.focus(); return; }
+    if (!dateIn.value || dateIn.value < dateIn.min) { err.textContent = 'Pick a date from today on.'; dateIn.focus(); return; }
+    err.textContent = '';
+    const nice = new Date(dateIn.value + 'T12:00').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long'});
+    document.getElementById('done-msg').textContent =
+      `Thanks, ${name.split(' ')[0]}! ${form.guests.value}, ${nice} at ${form.time.value}. We'll confirm by email within an hour.`;
+    form.classList.add('sent');
+  });
+  form.addEventListener('input', () => { err.textContent = ''; });
+</script>
+</body>
+</html>
